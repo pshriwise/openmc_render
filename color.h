@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-using Color = vec3;
+using Color = Vec3;
 
 void write_color(std::ostream &out, Color pixel_color) {
     // Write the translated [0,255] value of each color component.

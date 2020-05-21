@@ -3,6 +3,7 @@
 
 #include "color.h"
 #include "constants.h"
+#include "geom.h"
 #include "ray.h"
 
 Color ray_color(const Ray& r) {

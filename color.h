@@ -7,7 +7,9 @@
 
 #include <iostream>
 
-void write_color(std::ostream &out, color pixel_color) {
+using Color = vec3;
+
+void write_color(std::ostream &out, Color pixel_color) {
     // Write the translated [0,255] value of each color component.
     out << static_cast<int>(rgb_max * pixel_color.x()) << ' '
         << static_cast<int>(rgb_max * pixel_color.y()) << ' '

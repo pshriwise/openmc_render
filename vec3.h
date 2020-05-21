@@ -52,8 +52,7 @@ class vec3 {
 };
 
 // type aliases for vec3
-typedef point3 = vec3;
-typedef color = vec3;
+using point3 = vec3;
 
 // vec3 Utility Functions
 inline std::ostream& operator<<(std::ostream &out, const vec3 &v) {

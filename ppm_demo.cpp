@@ -1,6 +1,7 @@
 
 #include <iostream>
 
+#include "color.h"
 #include "constants.h"
 
 int main() {
@@ -16,11 +17,8 @@ int main() {
             double g = double(j) / (image_height - 1);
             double b = 0.25;
 
-            int ir = static_cast<int>(rgb_max * r);
-            int ig = static_cast<int>(rgb_max * g);
-            int ib = static_cast<int>(rgb_max * b);
-
-            std::cout << ir << " " << ig << " " << ib << "\n";
+            Color pixel_color = {r, g, b};
+            write_color(std::cout, pixel_color);
         }
     }
     std::cerr << "\nDone\n";

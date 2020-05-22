@@ -14,6 +14,9 @@ tracer: *.cpp *.h
 tracer_dbg: *.cpp *.h
 	g++ -g tracer.cpp geom.cpp -o tracer
 
+tracer_omp: *.cpp *.h
+	g++ -O2 -fopenmp tracer.cpp geom.cpp -pthread -o tracer
+
 test: tracer
 	- ./tracer
 	- eog image.ppm

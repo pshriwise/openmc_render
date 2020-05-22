@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
+#include <sstream>
 
 #include "camera.h"
 #include "color.h"
@@ -157,18 +158,16 @@ Scene book_cover() {
 
 int main() {
 
-  std::ofstream outfile("image.ppm");
-
-  const int image_width = 100;
+  const int image_width = 800;
   const int image_height = static_cast<int>(image_width / ASPECT_RATIO);
-  outfile << "P3\n" << image_width << " " << image_height << "\n" << IRGB_MAX << "\n";
-
-  Scene scene = three_spheres();
 
   std::vector<std::array<int, 3>> img_data(image_width*image_width);
 
+  // image generation
+  Scene scene = three_spheres();
+
+  #pragma omp parallel for shared(img_data, scene) schedule(dynamic)
   for (int j = image_height - 1; j >= 0; --j) {
-    std::cerr << "\rScanlines remaining: " << j << " " << std::flush;
     for (int i = 0; i < image_width; ++i) {
       Color pixel_color{0.0, 0.0, 0.0};
       for (int s = 0; s < SAMPLES_PER_PIXEL; ++s) {
@@ -181,12 +180,17 @@ int main() {
     }
   }
 
+  // write image file
+  std::ofstream outfile("image.ppm");
+
+  // write ppm header
+  outfile << "P3\n" << image_width << " " << image_height << "\n" << IRGB_MAX << "\n";
+
   for (int j = 0; j <= image_height - 1; ++j) {
     for (int i = 0; i < image_width; ++i) {
       write_color(outfile, img_data[j * image_width + i]);
     }
   }
 
-  std::cerr << "\nDone\n";
   return 0;
 }

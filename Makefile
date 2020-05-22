@@ -9,8 +9,11 @@ test_image: ppm
 	- eog image.ppm
 
 tracer: tracer.cpp geom.cpp
-	g++ tracer.cpp geom.cpp -o tracer
+	g++ -O2 tracer.cpp geom.cpp -o tracer
 
 tracer_test: tracer
 	- ./tracer > image.ppm
 	- eog image.ppm
+
+clean:
+	- rm -rf ppm tracer

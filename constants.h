@@ -16,9 +16,10 @@ inline double rad_to_deg(double radians) { return radians * 180.0 / pi; }
 
 // Image
 const double ASPECT_RATIO = 16.0 / 9.0;
+const int SAMPLES_PER_PIXEL = 100;
 
 // Colors
-const double RGB_MAX = 255.999;
+const double RGB_MAX = 256;
 const int IRGB_MAX = 255;
 
 #endif

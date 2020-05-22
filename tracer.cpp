@@ -82,9 +82,9 @@ int main() {
   const int image_height = static_cast<int>(image_width / ASPECT_RATIO);
   outfile << "P3\n" << image_width << " " << image_height << "\n" << IRGB_MAX << "\n";
 
-  auto scene = red_blue();
+  auto scene = three_spheres();
 
-  Camera camera(90, ASPECT_RATIO);
+  Camera camera(Point3(0,0,0), Point3(0, 0, -1), Point3(0, 1, 0), 90, ASPECT_RATIO);
 
   for (int j = image_height - 1; j >= 0; --j) {
     std::cerr << "\rScanlines remaining: " << j << " " << std::flush;

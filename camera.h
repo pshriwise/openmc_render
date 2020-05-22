@@ -10,17 +10,22 @@ class Camera {
 public:
 
   // Constructor
-  Camera (double vert_field_of_view, double aspect_ratio) {
+  Camera (Point3 look_from, Point3 look_at, Vec3 vup, double vert_field_of_view, double aspect_ratio) {
+
     double theta = deg_to_rad(vert_field_of_view);
     double h = tan(theta / 2.0);
     double viewport_height = 2.0 * h;
     double viewport_width = ASPECT_RATIO * viewport_height;
     double focal_length = 1.0;
 
-    origin_ = Point3(0.0, 0.0, 0.0);
-    horizontal_ = Vec3(viewport_width, 0.0, 0.0);
-    vertical_ = Vec3(0.0, viewport_height, 0.0);
-    llc_ = origin_ - horizontal_ / 2.0 - vertical_ / 2.0 - Vec3(0.0, 0.0, focal_length);
+    Vec3 w = unit_vector(look_from - look_at);
+    Vec3 u = unit_vector(cross(vup, w));
+    Vec3 v = cross(w, u);
+
+    origin_ = look_from;
+    horizontal_ = viewport_width * u;
+    vertical_ = viewport_height * v;
+    llc_ = origin_ - horizontal_ / 2.0 - vertical_ / 2.0 - w;
   }
 
   Ray get_ray(double u, double v) const {

@@ -12,17 +12,33 @@ public:
 class Lambertian : public Material {
 public:
   // Constructors
-  Lambertian(const Color &a ) : albedo_(a) {};
+  Lambertian(const Color &a) : albedo_(a) {};
 
   virtual bool scatter(const Ray& r, const Hit& hit, Color& attenuation, Ray& scattered) const {
-    Vec3 scatter_dir = hit.n_ + Vec3::random();
-    scattered = Ray(hit.p_, scatter_dir);
+    Vec3 scattered_dir = hit.n_ + Vec3::random();
+    scattered = Ray(hit.p_, scattered_dir);
     attenuation = albedo_;
     return true;
   }
 
   // Data members
   Color albedo_;
-
 };
+
+class Metal : public Material {
+public:
+  // Constructors
+  Metal(const Color &a) : albedo_(a) {};
+
+  virtual bool scatter(const Ray& r, const Hit& hit, Color& attenuation, Ray& scattered) const {
+    Vec3 reflected_dir = reflect(r.direction(), hit.n_);
+    scattered = Ray(hit.p_, reflected_dir);
+    attenuation = albedo_;
+    return (dot(scattered.direction(), hit.n_) > 0.0);
+  }
+
+  // Data members
+  Color albedo_;
+};
+
 #endif

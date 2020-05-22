@@ -11,6 +11,9 @@ test_image: ppm
 tracer: *.cpp *.h
 	g++ -O2 tracer.cpp geom.cpp -o tracer
 
+tracer_dbg: *.cpp *.h
+	g++ -g tracer.cpp geom.cpp -o tracer
+
 test: tracer
 	- ./tracer
 	- eog image.ppm

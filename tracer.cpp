@@ -63,9 +63,9 @@ int main() {
   auto scene = Scene::create("book_cover");
   ProgressBar pb{};
 
-  #pragma omp parallel for shared(img_data, scene) schedule(dynamic)
   for (int j = image_height - 1; j >= 0; --j) {
     pb.set_value(100.0 * (image_height - 1 - j) / (double)image_height);
+    #pragma omp parallel for shared(img_data, scene) schedule(dynamic)
     for (int i = 0; i < image_width; ++i) {
       Color pixel_color{0.0, 0.0, 0.0};
       for (int s = 0; s < SAMPLES_PER_PIXEL; ++s) {

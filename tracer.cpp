@@ -44,7 +44,7 @@ int main() {
 
   std::ofstream outfile("image.ppm");
 
-  const int image_width = 500;
+  const int image_width = 400;
   const int image_height = static_cast<int>(image_width / ASPECT_RATIO);
   outfile << "P3\n" << image_width << " " << image_height << "\n" << IRGB_MAX << "\n";
 
@@ -53,8 +53,8 @@ int main() {
   auto material1 = std::make_shared<Lambertian>(Color(0.7, 0.3, 0.3));
   auto material2 = std::make_shared<Lambertian>(Color(0.8 , 0.8, 0.0));
 
-  auto material3 = std::make_shared<Metal>(Color(0.8, 0.6, 0.2));
-  auto material4 = std::make_shared<Metal>(Color(0.8, 0.8, 0.8));
+  auto material3 = std::make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.3);
+  auto material4 = std::make_shared<Metal>(Color(0.8, 0.8, 0.8), 1.0);
 
   scene.add(std::make_shared<Sphere>(Point3(0, 0, -1), 0.5, material1));
   scene.add(std::make_shared<Sphere>(Point3(0, -100.5, -1), 100, material2));

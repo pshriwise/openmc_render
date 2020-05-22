@@ -82,6 +82,7 @@ public:
 
 // type aliases for Vec3
 using Point3 = Vec3;
+using Color = Vec3;
 
 // Vec3 Utility Functions
 inline std::ostream& operator<<(std::ostream &out, const Vec3 &v) {

@@ -32,6 +32,7 @@ bool Sphere::hit(const Ray& r, double t_min, double t_max, Hit& rec) const {
       rec.p_ = r.at(t);
       auto outward_norm = (rec.p_ - center_) / radius_;
       rec.set_face_normal(r, outward_norm);
+      rec.material_ = material_;
       return true;
     }
     t = (-half_b + root) / a;
@@ -40,6 +41,7 @@ bool Sphere::hit(const Ray& r, double t_min, double t_max, Hit& rec) const {
       rec.p_ = r.at(t);
       auto outward_norm = (rec.p_ - center_) / radius_;
       rec.set_face_normal(r, outward_norm);
+      rec.material_ = material_;
       return true;
     }
   }

@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "hit.h"
+#include "material.h"
 #include "ray.h"
 
 class Object {
@@ -37,7 +38,8 @@ class Sphere : public Object {
 public:
   // Constructors
   Sphere() {};
-  Sphere(Point3 center, double radius) : center_(center), radius_(radius) {};
+  Sphere(Point3 center, double radius, std::shared_ptr<Material> material)
+  : center_(center), radius_(radius), material_(material) {};
 
   // Methods
   virtual bool hit(const Ray& r, double t_min, double t_max, Hit& rec) const;
@@ -45,6 +47,7 @@ public:
   // Data members
   Point3 center_;
   double radius_;
+  std::shared_ptr<Material> material_;
 };
 
 bool hit_sphere(const Point3& center, double radius, const Ray& r, double& t);

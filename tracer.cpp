@@ -7,11 +7,17 @@
 #include "ray.h"
 
 Color ray_color(const Ray& r) {
-    if (hit_sphere(Point3(0, 0, -1), 0.5, r)) {
-        return Color(1, 0, 0);
+    double t;
+
+    Point3 sphere_origin = Point3(0, 0, -1);
+
+    if (hit_sphere(sphere_origin, 0.5, r, t) && t > 0.0) {
+        // compute the location of the hit
+        auto normal = unit_vector(r.at(t) - sphere_origin);
+        return 0.5 * Color(normal.x()+1, normal.y()+1, normal.z()+1);
     }
     Vec3 unit_direction = unit_vector(r.direction());
-    auto t = 0.5*(unit_direction.y() + 1.0);
+    t = 0.5*(unit_direction.y() + 1.0);
     return (1.0-t)*Color(1.0, 1.0, 1.0) + t*Color(0.5, 0.7, 1.0);
 }
 

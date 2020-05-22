@@ -6,6 +6,6 @@
 
 #include "ray.h"
 
-bool hit_sphere(const Point3& center, double radius, const Ray& r);
+bool hit_sphere(const Point3& center, double radius, const Ray& r, double& t);
 
 #endif

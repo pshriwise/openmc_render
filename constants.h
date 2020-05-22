@@ -22,4 +22,7 @@ const int SAMPLES_PER_PIXEL = 100;
 const double RGB_MAX = 256;
 const int IRGB_MAX = 255;
 
+// Scene
+const int MAX_BOUNCE = 50;
+
 #endif

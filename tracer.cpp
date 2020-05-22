@@ -9,15 +9,20 @@
 #include "rand.h"
 #include "ray.h"
 
-Color ray_color(const Ray& r, const ObjectList& scene) {
+Color ray_color(const Ray& r, const ObjectList& scene, int depth=0) {
   Hit hit;
+  if (depth > MAX_BOUNCE) {
+    return Color(0,0,0);
+  }
+
   if (scene.hit(r, 0.0, INFTY, hit)) {
       // compute the location of the hit
       auto& normal = hit.n_;
       Point3 target = hit.p_ + hit.n_ + Vec3::random_in_unit_sphere();
-      return 0.5 * ray_color(Ray(hit.p_, target - hit.p_), scene);
+      return 0.5 * ray_color(Ray(hit.p_, target - hit.p_), scene, depth++);
   }
 
+  // Color using background
   Vec3 unit_direction = unit_vector(r.direction());
   double t = 0.5*(unit_direction.y() + 1.0);
   return (1.0-t)*Color(1.0, 1.0, 1.0) + t*Color(0.5, 0.7, 1.0);
@@ -37,12 +42,12 @@ int main() {
   Camera camera;
 
   for (int j = image_height - 1; j >= 0; --j) {
-    std::cerr << "\rScanlines remaining: " << j << std::flush;
+    std::cerr << "\rScanlines remaining: " << j << " " << std::flush;
     for (int i = 0; i < image_width; ++i) {
       Color pixel_color{0.0, 0.0, 0.0};
       for (int s = 0; s < SAMPLES_PER_PIXEL; ++s) {
-        double u = double(i + nrand()) / (image_width - 1);
-        double v = double(j + nrand()) / (image_height - 1);
+        double u = (i + nrand()) / (image_width - 1);
+        double v = (j + nrand()) / (image_height - 1);
         Ray r = camera.get_ray(u, v);
         pixel_color += ray_color(r, scene);
       }

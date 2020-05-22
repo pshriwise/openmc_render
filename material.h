@@ -42,4 +42,29 @@ public:
   double fuzz_;
 };
 
+class Dielectric : public Material {
+public:
+  // Constructors
+  Dielectric(double refraction_index) : ref_idx_(refraction_index) {};
+
+  // Methods
+  virtual bool scatter(const Ray& r, const Hit& hit, Color& attenuation, Ray& scattered) const {
+    attenuation = Color(1.0, 1.0, 1.0);
+    double eta_ratio;
+    if (hit.front_face_) {
+      eta_ratio = 1.0 / ref_idx_;
+    } else {
+      eta_ratio = ref_idx_;
+    }
+
+    Vec3 unit_dir = unit_vector(r.direction());
+    Vec3 refracted = refract(unit_dir, hit.n_, eta_ratio);
+    scattered = Ray(hit.p_, refracted);
+    return true;
+  }
+
+  // Data members
+  double ref_idx_;
+};
+
 #endif

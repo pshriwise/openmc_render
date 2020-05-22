@@ -142,4 +142,11 @@ inline Vec3 reflect(const Vec3& v, const Vec3& n) {
   return v - 2.0 * dot(v,n) * n;
 }
 
+inline Vec3 refract(const Vec3& dir_in, const Vec3& n, double eta_ratio) {
+  auto cos_theta = dot(-dir_in, n);
+  Vec3 r_out_parallel = eta_ratio * (dir_in + cos_theta * n);
+  Vec3 r_out_perp = -sqrt(1.0 - r_out_parallel.length_squared()) * n;
+  return r_out_parallel + r_out_perp;
+}
+
 #endif

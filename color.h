@@ -8,6 +8,11 @@
 
 #include <fstream>
 
+// Some constant colors
+const Color WHITE {1.0, 1.0, 1.0};
+const Color BLACK {0.0, 0.0, 0.0};
+const Color ABSORBED {0.0, 0.0, 0.0};
+
 std::array<int, 3> gen_color( Color pixel_color, int n_samples) {
     double r = pixel_color.x();
     double g = pixel_color.y();

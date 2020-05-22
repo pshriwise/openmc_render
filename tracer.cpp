@@ -12,8 +12,51 @@
 #include "rand.h"
 #include "ray.h"
 
-Color ray_color(const Ray& r, const ObjectList& objects, int depth = 0) {
+Color ray_color(const Ray& r, const ObjectList& objects) {
+  // copy of the input ray
+  Ray ray = r;
+  Color ray_color;
+
+  std::vector<Color> stack;
+
+  while(true) {
+
+    if (stack.size() > MAX_BOUNCE) {
+      stack.push_back(Color(0.0, 0.0, 0.0));
+      break;
+    }
+
+    Hit hit;
+    if (objects.hit(ray, 0.001, INFTY, hit)) {
+      // scatter, add color contribution and continue to follow the ray
+      if (hit.material_->scatter(ray, hit, ray_color, ray)) {
+        stack.push_back(ray_color);
+        continue;
+      // absorption, add null color to the end of the stack
+      } else {
+        stack.push_back(Color(0.0, 0.0, 0.0));
+        break;
+      }
+    }
+
+    // ray reached the background, compute background value and add it to the stack
+    Vec3 unit_direction = unit_vector(r.direction());
+    double t = 0.5*(unit_direction.y() + 1.0);
+    stack.push_back((1.0-t)*Color(1.0, 1.0, 1.0) + t*Color(0.5, 0.7, 1.0));
+    break;
+  }
+
+  if (stack.size() > 0) {
+    auto color_out = std::accumulate(stack.begin(), stack.end(), Color(1.0, 1.0, 1.0), std::multiplies<Color>());
+    return color_out;
+  }
+
+  return BLACK;
+}
+
+Color ray_color_inner(const Ray& r, const ObjectList& objects, int depth = 0) {
   Hit hit;
+
   if (depth > MAX_BOUNCE) {
     return Color(0,0,0);
   }
@@ -22,7 +65,7 @@ Color ray_color(const Ray& r, const ObjectList& objects, int depth = 0) {
     Ray scattered;
     Color attenuation;
     if (hit.material_->scatter(r, hit, attenuation, scattered)) {
-      return attenuation * ray_color(scattered, objects, ++depth);
+      return attenuation * ray_color_inner(scattered, objects, ++depth);
     }
     return Color(0.0, 0.0, 0.0);
   }
@@ -142,10 +185,11 @@ Scene book_cover() {
   objects.add(std::make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));
 
   // Setup camera
-  Point3 camera_position{13, 2, 3};
+  Point3 camera_position{13, 2, -3};
   Point3 camera_target{0, 0, 0};
   double field_of_view = 20;
   double aperture = 0.1;
+  double focal_dist = 10.0;
 
   Camera camera(camera_position,
                 camera_target,
@@ -159,13 +203,13 @@ Scene book_cover() {
 
 int main() {
 
-  const int image_width = 800;
+  const int image_width = 400;
   const int image_height = static_cast<int>(image_width / ASPECT_RATIO);
 
   std::vector<std::array<int, 3>> img_data(image_width*image_width);
 
   // image generation
-  Scene scene = book_cover();
+  Scene scene = three_spheres();
   ProgressBar pb{};
 
   #pragma omp parallel for shared(img_data, scene) schedule(dynamic)

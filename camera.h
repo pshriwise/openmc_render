@@ -15,7 +15,7 @@ public:
     double viewport_width = ASPECT_RATIO * viewport_height;
     double focal_length = 1.0;
 
-    origin_ = Point3();
+    origin_ = Point3(0.0, 0.0, 0.0);
     horizontal_ = Vec3(viewport_width, 0.0, 0.0);
     vertical_ = Vec3(0.0, viewport_height, 0.0);
     llc_ = origin_ - horizontal_ / 2.0 - vertical_ / 2.0 - Vec3(0.0, 0.0, focal_length);

@@ -61,6 +61,14 @@ public:
     return Vec3(nrand(min, max), nrand(min, max), nrand(min, max));
   }
 
+  inline static Vec3 random_in_unit_sphere() {
+    while (true) {
+      auto p = Vec3::random(-1, 1);
+      if (p.length_squared() >= 1) continue;
+      return p;
+    }
+  }
+
 public:
   // Data members
   double e[3];

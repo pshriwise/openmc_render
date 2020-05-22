@@ -14,7 +14,8 @@ Color ray_color(const Ray& r, const ObjectList& scene) {
   if (scene.hit(r, 0.0, INFTY, hit)) {
       // compute the location of the hit
       auto& normal = hit.n_;
-      return 0.5 * (hit.n_ + Color(1.0, 1.0, 1.0));
+      Point3 target = hit.p_ + hit.n_ + Vec3::random_in_unit_sphere();
+      return 0.5 * ray_color(Ray(hit.p_, target - hit.p_), scene);
   }
 
   Vec3 unit_direction = unit_vector(r.direction());
@@ -30,7 +31,7 @@ int main() {
 
   // Rendering objects
   ObjectList scene;
-  scene.add(std::make_shared<Sphere>(Point3(0, 0, -1), 0.5));
+  scene.add(std::make_shared<Sphere>(Point3(0, 0, -1.0), 0.5));
   scene.add(std::make_shared<Sphere>(Point3(0, -100.5, -1), 100));
 
   Camera camera;

@@ -1,4 +1,6 @@
 
+TRACER_SOURCES=tracer.cpp geom.cpp progress_bar.cpp scene.cpp
+
 all: tracer
 
 ppm: ppm_demo.cpp
@@ -9,13 +11,13 @@ test_image: ppm
 	- eog image.ppm
 
 tracer: *.cpp *.h
-	g++ -O2 tracer.cpp geom.cpp progress_bar.cpp -o tracer
+	g++ -O2 $(TRACER_SOURCES) -o tracer
 
 tracer_dbg: *.cpp *.h
-	g++ -g tracer.cpp geom.cpp progress_bar.cpp -o tracer
+	g++ -g $(TRACER_SOURCES) -o tracer
 
 tracer_omp: *.cpp *.h
-	g++ -O2 -fopenmp tracer.cpp geom.cpp progress_bar.cpp -pthread -o tracer
+	g++ -O2 -fopenmp $(TRACER_SOURCES) -pthread -o tracer
 
 test: tracer
 	- ./tracer

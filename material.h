@@ -2,6 +2,7 @@
 #ifndef MATERIAL_H
 #define MATERIAL
 
+#include "util.h"
 #include "vec3.h"
 
 class Material {
@@ -58,6 +59,24 @@ public:
     }
 
     Vec3 unit_dir = unit_vector(r.direction());
+    double cos_theta = std::min(dot(-unit_dir, hit.n_), 1.0);
+    double sin_theta = sqrt(1.0 - cos_theta*cos_theta);
+    // Must reflect
+    if (eta_ratio * sin_theta > 1.0) {
+      Vec3 reflected = reflect(r.direction(), hit.n_);
+      scattered = Ray(hit.p_, reflected);
+      return true;
+    }
+
+    // Select reflection over refraction based on probability threshold
+    double reflect_threshold = schlick(cos_theta, eta_ratio);
+    if (nrand() < reflect_threshold){
+      Vec3 reflected = reflect(unit_dir, hit.n_);
+      scattered = Ray(hit.p_, reflected);
+      return true;
+    }
+
+    // Ray refracts
     Vec3 refracted = refract(unit_dir, hit.n_, eta_ratio);
     scattered = Ray(hit.p_, refracted);
     return true;

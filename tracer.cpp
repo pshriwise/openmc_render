@@ -44,16 +44,16 @@ int main() {
 
   std::ofstream outfile("image.ppm");
 
-  const int image_width = 300;
+  const int image_width = 400;
   const int image_height = static_cast<int>(image_width / ASPECT_RATIO);
   outfile << "P3\n" << image_width << " " << image_height << "\n" << IRGB_MAX << "\n";
 
   // Rendering objects
   ObjectList scene;
-  auto material1 = std::make_shared<Lambertian>(Color(0.7, 0.3, 0.3));
+  auto material1 = std::make_shared<Lambertian>(Color(0.1, 0.2, 0.5));
   auto material2 = std::make_shared<Lambertian>(Color(0.8 , 0.8, 0.0));
 
-  auto material3 = std::make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.3);
+  auto material3 = std::make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.0);
   //auto material4 = std::make_shared<Metal>(Color(0.8, 0.8, 0.8), 1.0);
   auto material4 = std::make_shared<Dielectric>(1.5);
 

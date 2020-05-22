@@ -12,18 +12,27 @@
 #include "rand.h"
 #include "ray.h"
 
+
+struct Scene {
+  ObjectList objects_;
+  Camera camera_;
+
+  inline Camera& camera() { return camera_; }
+  inline ObjectList& objects() { return objects_; }
+};
+
 Color ray_color(const Ray& r, const ObjectList& objects) {
   // copy of the input ray
   Ray ray = r;
   Color ray_color;
 
   std::vector<Color> stack;
+  stack.reserve(MAX_BOUNCE + 1);
 
   while(true) {
 
     if (stack.size() > MAX_BOUNCE) {
-      stack.push_back(Color(0.0, 0.0, 0.0));
-      break;
+      return ABSORBED;
     }
 
     Hit hit;
@@ -34,8 +43,7 @@ Color ray_color(const Ray& r, const ObjectList& objects) {
         continue;
       // absorption, add null color to the end of the stack
       } else {
-        stack.push_back(Color(0.0, 0.0, 0.0));
-        break;
+        return ABSORBED;
       }
     }
 
@@ -47,42 +55,11 @@ Color ray_color(const Ray& r, const ObjectList& objects) {
   }
 
   if (stack.size() > 0) {
-    auto color_out = std::accumulate(stack.begin(), stack.end(), Color(1.0, 1.0, 1.0), std::multiplies<Color>());
-    return color_out;
+    return std::accumulate(stack.begin(), stack.end(), WHITE, std::multiplies<Color>());
   }
 
   return BLACK;
 }
-
-Color ray_color_inner(const Ray& r, const ObjectList& objects, int depth = 0) {
-  Hit hit;
-
-  if (depth > MAX_BOUNCE) {
-    return Color(0,0,0);
-  }
-
-  if (objects.hit(r, 0.001, INFTY, hit)) {
-    Ray scattered;
-    Color attenuation;
-    if (hit.material_->scatter(r, hit, attenuation, scattered)) {
-      return attenuation * ray_color_inner(scattered, objects, ++depth);
-    }
-    return Color(0.0, 0.0, 0.0);
-  }
-
-  // Color using background
-  Vec3 unit_direction = unit_vector(r.direction());
-  double t = 0.5*(unit_direction.y() + 1.0);
-  return (1.0-t)*Color(1.0, 1.0, 1.0) + t*Color(0.5, 0.7, 1.0);
-}
-
-struct Scene {
-  ObjectList objects_;
-  Camera camera_;
-
-  inline Camera& camera() { return camera_; }
-  inline ObjectList& objects() { return objects_; }
-};
 
 Scene three_spheres() {
   // Rendering objects
@@ -90,8 +67,7 @@ Scene three_spheres() {
   auto material1 = std::make_shared<Lambertian>(Color(0.1, 0.2, 0.5));
   auto material2 = std::make_shared<Lambertian>(Color(0.8 , 0.8, 0.0));
 
-  auto material3 = std::make_shared<Metal>(Color(0.8, 0.6, 0.2), 0.0);
-  //auto material4 = std::make_shared<Metal>(Color(0.8, 0.8, 0.8), 1.0);
+  auto material3 = std::make_shared<Metal>(Color(0.8, 0.8, 0.8), 1.0);
   auto material4 = std::make_shared<Dielectric>(1.5);
 
   objects.add(std::make_shared<Sphere>(Point3(0, 0, -1), 0.5, material1));
@@ -209,7 +185,7 @@ int main() {
   std::vector<std::array<int, 3>> img_data(image_width*image_width);
 
   // image generation
-  Scene scene = three_spheres();
+  Scene scene = book_cover();
   ProgressBar pb{};
 
   #pragma omp parallel for shared(img_data, scene) schedule(dynamic)

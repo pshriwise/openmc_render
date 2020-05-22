@@ -149,4 +149,12 @@ inline Vec3 refract(const Vec3& dir_in, const Vec3& n, double eta_ratio) {
   return r_out_parallel + r_out_perp;
 }
 
+inline Vec3 random_in_unit_disk() {
+  while(true) {
+    Vec3 p{nrand(-1, 1), nrand(-1, 1), 0};
+    if (p.length_squared() >= 1) continue;
+    return p;
+  }
+}
+
 #endif

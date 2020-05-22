@@ -84,7 +84,16 @@ int main() {
 
   auto scene = three_spheres();
 
-  Camera camera(Point3(-2,2,1), Point3(0, 0, -1), Point3(0, 1, 0), 20, ASPECT_RATIO);
+  Point3 camera_position{3, 3, 2};
+  Point3 camera_target{0, 0, -1};
+
+  Camera camera(camera_position,
+                camera_target,
+                Point3(0, 1, 0),
+                20,
+                ASPECT_RATIO,
+                2.0,
+                (camera_position - camera_target).length());
 
   for (int j = image_height - 1; j >= 0; --j) {
     std::cerr << "\rScanlines remaining: " << j << " " << std::flush;

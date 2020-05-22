@@ -12,7 +12,7 @@ Color ray_color(const Ray& r) {
   Sphere s({0, 0, -1}, 0.5);
   Hit hit;
 
-  if (s.hit(r, 0.0, INF, hit)) {
+  if (s.hit(r, 0.0, INFTY, hit)) {
       // compute the location of the hit
       auto& normal = hit.n_;
       return 0.5 * Color(normal.x()+1, normal.y()+1, normal.z()+1);

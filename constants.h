@@ -2,8 +2,17 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#include <cmath>
+#include <limits>
+
+using std::sqrt;
+
 // Numerics
-const double INF = 1.E30;
+const double INFTY = std::numeric_limits<double>::infinity();
+const double pi = 3.1415926535897932385;
+
+inline double deg_to_rad(double degrees) { return degrees * pi / 180.0; }
+inline double rad_to_deg(double radians) { return radians * 180.0 / pi; }
 
 // Image
 const double ASPECT_RATIO = 16.0 / 9.0;

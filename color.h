@@ -8,7 +8,7 @@
 
 #include <fstream>
 
-void write_color(std::ofstream &out, Color pixel_color, int n_samples) {
+std::array<int, 3> gen_color( Color pixel_color, int n_samples) {
     double r = pixel_color.x();
     double g = pixel_color.y();
     double b = pixel_color.z();
@@ -25,9 +25,13 @@ void write_color(std::ofstream &out, Color pixel_color, int n_samples) {
 
     const double color_min = 0.0;
     const double color_max = 0.999;
-    out << static_cast<int>(RGB_MAX * clamp(r, color_min, color_max)) << ' '
-        << static_cast<int>(RGB_MAX * clamp(g, color_min, color_max)) << ' '
-        << static_cast<int>(RGB_MAX * clamp(b, color_min, color_max)) << '\n';
+    return {static_cast<int>(RGB_MAX * clamp(r, color_min, color_max)),
+            static_cast<int>(RGB_MAX * clamp(g, color_min, color_max)),
+            static_cast<int>(RGB_MAX * clamp(b, color_min, color_max))};
+}
+
+void write_color(std::ofstream &out, std::array<int, 3> color) {
+    out << color[0] << ' ' << color[1] << ' ' << color[2] << '\n';
 }
 
 #endif

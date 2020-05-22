@@ -159,11 +159,13 @@ int main() {
 
   std::ofstream outfile("image.ppm");
 
-  const int image_width = 400;
+  const int image_width = 100;
   const int image_height = static_cast<int>(image_width / ASPECT_RATIO);
   outfile << "P3\n" << image_width << " " << image_height << "\n" << IRGB_MAX << "\n";
 
-  Scene scene = book_cover();
+  Scene scene = three_spheres();
+
+  std::vector<std::array<int, 3>> img_data(image_width*image_width);
 
   for (int j = image_height - 1; j >= 0; --j) {
     std::cerr << "\rScanlines remaining: " << j << " " << std::flush;
@@ -175,9 +177,16 @@ int main() {
         Ray r = scene.camera().get_ray(u, v);
         pixel_color += ray_color(r, scene.objects());
       }
-      write_color(outfile, pixel_color, SAMPLES_PER_PIXEL);
+      img_data[(image_height - 1 - j) * image_width + i] = gen_color(pixel_color, SAMPLES_PER_PIXEL);
     }
   }
+
+  for (int j = 0; j <= image_height - 1; ++j) {
+    for (int i = 0; i < image_width; ++i) {
+      write_color(outfile, img_data[j * image_width + i]);
+    }
+  }
+
   std::cerr << "\nDone\n";
   return 0;
 }

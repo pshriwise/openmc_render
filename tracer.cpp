@@ -7,20 +7,24 @@
 #include "ray.h"
 
 Color ray_color(const Ray& r) {
+    if (hit_sphere(Point3(0, 0, -1), 0.5, r)) {
+        return Color(1, 0, 0);
+    }
     Vec3 unit_direction = unit_vector(r.direction());
     auto t = 0.5*(unit_direction.y() + 1.0);
     return (1.0-t)*Color(1.0, 1.0, 1.0) + t*Color(0.5, 0.7, 1.0);
 }
 
 int main() {
-    const int image_width = 256;
-    const int image_height = 256;
-    const int irgb_max = 255;
-    std::cout << "P3\n" << image_width << " " << image_height << "\n" << irgb_max << "\n";
+
+    const int image_width = 384;
+    const int image_height = static_cast<int>(image_width / ASPECT_RATIO);
+
+    std::cout << "P3\n" << image_width << " " << image_height << "\n" << IRGB_MAX << "\n";
 
     // viewport parameters
     double viewport_height = 2.0;
-    double viewport_width = aspect_ratio * viewport_height;
+    double viewport_width = ASPECT_RATIO * viewport_height;
     double focal_length = 1.0;
 
     // camera location

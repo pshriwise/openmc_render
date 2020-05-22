@@ -51,8 +51,8 @@ Scene three_spheres() {
 
   objects.add(std::make_shared<Sphere>(Point3(0, 0, -1), 0.5, material1));
   objects.add(std::make_shared<Sphere>(Point3(0, -100.5, -1), 100, material2));
-  objects.add(std::make_shared<Sphere>(Point3(1.1, 0, -1), 0.5, material3));
-  objects.add(std::make_shared<Sphere>(Point3(-1.1, 0, -1), 0.5, material4));
+  objects.add(std::make_shared<Sphere>(Point3(1.0, 0, -1), 0.5, material3));
+  objects.add(std::make_shared<Sphere>(Point3(-1.0, 0, -1), 0.5, material4));
 
   // Setup camera
   Point3 camera_position{3, 3, 2};
@@ -124,7 +124,7 @@ Scene book_cover() {
         } else {
           // glass
           auto sphere_material = std::make_shared<Dielectric>(1.5);
-          objects.add(std::make_shared<Sphere>(center, 0.1, sphere_material));
+          objects.add(std::make_shared<Sphere>(center, 0.2, sphere_material));
         }
       }
     }
@@ -152,23 +152,6 @@ Scene book_cover() {
                 ASPECT_RATIO,
                 aperture,
                 10.0);
-
-  // // Camera setup
-  // Point3 camera_origin{13, 2, 3};
-  // Point3 camera_target{0, 0, 0};
-  // Vec3 vup{0, 1, 0};
-  // double field_of_view = 20;
-  // double focus_dist = 10.0;
-  // double aperture = 0.1;
-
-  // Camera camera(camera_origin,
-  //               camera_target,
-  //               vup,
-  //               field_of_view,
-  //               ASPECT_RATIO,
-  //               aperture,
-  //               focus_dist);
-
   return {objects, camera};
 }
 

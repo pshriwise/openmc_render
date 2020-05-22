@@ -10,8 +10,10 @@ class Camera {
 public:
 
   // Constructor
-  Camera () {
-    double viewport_height = 2.0;
+  Camera (double vert_field_of_view, double aspect_ratio) {
+    double theta = deg_to_rad(vert_field_of_view);
+    double h = tan(theta / 2.0);
+    double viewport_height = 2.0 * h;
     double viewport_width = ASPECT_RATIO * viewport_height;
     double focal_length = 1.0;
 

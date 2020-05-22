@@ -62,7 +62,7 @@ int main() {
   scene.add(std::make_shared<Sphere>(Point3(1.1, 0, -1), 0.5, material3));
   scene.add(std::make_shared<Sphere>(Point3(-1.1, 0, -1), 0.5, material4));
 
-  Camera camera;
+  Camera camera(90, ASPECT_RATIO);
 
   for (int j = image_height - 1; j >= 0; --j) {
     std::cerr << "\rScanlines remaining: " << j << " " << std::flush;

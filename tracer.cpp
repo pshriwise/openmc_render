@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <fstream>
 #include <memory>
 
 #include "camera.h"
@@ -32,9 +33,11 @@ Color ray_color(const Ray& r, const ObjectList& scene, int depth=0) {
 
 int main() {
 
-  const int image_width = 384;
+  std::ofstream outfile("image.ppm");
+
+  const int image_width = 500;
   const int image_height = static_cast<int>(image_width / ASPECT_RATIO);
-  std::cout << "P3\n" << image_width << " " << image_height << "\n" << IRGB_MAX << "\n";
+  outfile << "P3\n" << image_width << " " << image_height << "\n" << IRGB_MAX << "\n";
 
   // Rendering objects
   ObjectList scene;
@@ -53,7 +56,7 @@ int main() {
         Ray r = camera.get_ray(u, v);
         pixel_color += ray_color(r, scene);
       }
-      write_color(std::cout, pixel_color, SAMPLES_PER_PIXEL);
+      write_color(outfile, pixel_color, SAMPLES_PER_PIXEL);
     }
   }
   std::cerr << "\nDone\n";

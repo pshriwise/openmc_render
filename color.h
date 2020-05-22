@@ -6,11 +6,11 @@
 #include "util.h"
 #include "vec3.h"
 
-#include <iostream>
+#include <fstream>
 
 using Color = Vec3;
 
-void write_color(std::ostream &out, Color pixel_color, int n_samples) {
+void write_color(std::ofstream &out, Color pixel_color, int n_samples) {
     double r = pixel_color.x();
     double g = pixel_color.y();
     double b = pixel_color.z();

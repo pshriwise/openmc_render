@@ -7,20 +7,8 @@
 #include <memory>
 #include <vector>
 
+#include "hit.h"
 #include "ray.h"
-
-struct Hit {
-  Point3 p_;
-  Vec3 n_;
-  bool front_face_;
-
-  inline void set_face_normal(const Ray& r, const Vec3& outward_normal) {
-    front_face_ = dot(r.direction(), outward_normal) < 0.0;
-    n_ = front_face_ ? outward_normal : -outward_normal;
-  }
-
-  double t_;
-};
 
 class Object {
 public:

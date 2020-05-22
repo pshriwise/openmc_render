@@ -8,6 +8,7 @@
 #include "color.h"
 #include "constants.h"
 #include "geom.h"
+#include "progress_bar.h"
 #include "rand.h"
 #include "ray.h"
 
@@ -164,10 +165,12 @@ int main() {
   std::vector<std::array<int, 3>> img_data(image_width*image_width);
 
   // image generation
-  Scene scene = three_spheres();
+  Scene scene = book_cover();
+  ProgressBar pb{};
 
   #pragma omp parallel for shared(img_data, scene) schedule(dynamic)
   for (int j = image_height - 1; j >= 0; --j) {
+    pb.set_value(100.0 * (image_height - 1 - j) / (double)image_height);
     for (int i = 0; i < image_width; ++i) {
       Color pixel_color{0.0, 0.0, 0.0};
       for (int s = 0; s < SAMPLES_PER_PIXEL; ++s) {

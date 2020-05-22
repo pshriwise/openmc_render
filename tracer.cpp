@@ -15,7 +15,7 @@ Color ray_color(const Ray& r, const ObjectList& scene, int depth=0) {
     return Color(0,0,0);
   }
 
-  if (scene.hit(r, 0.0, INFTY, hit)) {
+  if (scene.hit(r, 0.001, INFTY, hit)) {
       // compute the location of the hit
       auto& normal = hit.n_;
       Point3 target = hit.p_ + hit.n_ + Vec3::random_in_unit_sphere();

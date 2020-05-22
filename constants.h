@@ -9,10 +9,10 @@ using std::sqrt;
 
 // Numerics
 const double INFTY = std::numeric_limits<double>::infinity();
-const double pi = 3.1415926535897932385;
+const double PI = 3.1415926535897932385;
 
-inline double deg_to_rad(double degrees) { return degrees * pi / 180.0; }
-inline double rad_to_deg(double radians) { return radians * 180.0 / pi; }
+inline double deg_to_rad(double degrees) { return degrees * PI / 180.0; }
+inline double rad_to_deg(double radians) { return radians * 180.0 / PI; }
 
 // Image
 const double ASPECT_RATIO = 16.0 / 9.0;

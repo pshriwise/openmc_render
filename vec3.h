@@ -6,9 +6,12 @@
 #include <cmath>
 #include <iostream>
 
+#include "constants.h"
 #include "rand.h"
 
 using std::sqrt;
+using std::cos;
+using std::sin;
 
 class Vec3 {
 public:
@@ -54,7 +57,10 @@ public:
   }
 
   inline static Vec3 random() {
-    return Vec3(nrand(), nrand(), nrand());
+    double a = nrand(0, 2.0 * PI);
+    double z = nrand(-1, 1);
+    double r = sqrt(1 - z*z);
+    return Vec3(r * cos(a), r * sin(a), z);
   }
 
   inline static Vec3 random(double min, double max) {

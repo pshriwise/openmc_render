@@ -57,7 +57,7 @@ int main() {
   const int image_width = 400;
   const int image_height = static_cast<int>(image_width / ASPECT_RATIO);
 
-  std::vector<std::array<int, 3>> img_data(image_width*image_width);
+  std::vector<std::array<uint8_t, 3>> img_data(image_width*image_width);
 
   // image generation
   auto scene = Scene::create("book_cover");
@@ -79,16 +79,22 @@ int main() {
   }
 
   // write image file
-  std::ofstream outfile("image.ppm");
+  std::ofstream outfile;
+  outfile.open("image.ppm");
 
   // write ppm header
-  outfile << "P3\n" << image_width << " " << image_height << "\n" << IRGB_MAX << "\n";
+  outfile << "P6\n" << image_width << " " << image_height << "\n" << IRGB_MAX << "\n";
+  outfile.close();
+
+  outfile.open("image.ppm", std::ios::binary | std::ios::app);
 
   for (int j = 0; j <= image_height - 1; ++j) {
     for (int i = 0; i < image_width; ++i) {
       write_color(outfile, img_data[j * image_width + i]);
     }
   }
+  outfile << '\n';
+  outfile.close();
 
   return 0;
 }

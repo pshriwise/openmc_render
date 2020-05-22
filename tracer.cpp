@@ -18,7 +18,7 @@ Color ray_color(const Ray& r, const ObjectList& scene, int depth=0) {
   if (scene.hit(r, 0.001, INFTY, hit)) {
       // compute the location of the hit
       auto& normal = hit.n_;
-      Point3 target = hit.p_ + hit.n_ + Vec3::random_in_unit_sphere();
+      Point3 target = hit.p_ + hit.n_ + random_in_hemisphere(hit.n_);
 
       const double bounce_reduction = 0.5;
       return bounce_reduction * ray_color(Ray(hit.p_, target - hit.p_), scene, depth++);

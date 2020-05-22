@@ -128,4 +128,14 @@ inline Vec3 unit_vector(Vec3 v) {
   return v / v.length();
 }
 
+inline Vec3 random_in_hemisphere(const Vec3& normal) {
+  auto in_sphere = Vec3::random_in_unit_sphere();
+  if (dot(normal, in_sphere) > 0.0) {
+    return in_sphere;
+  } else {
+    return -in_sphere;
+  }
+}
+
+
 #endif

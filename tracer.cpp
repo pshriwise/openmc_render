@@ -25,15 +25,6 @@ Color ray_color(const Ray& r, const ObjectList& objects, int depth = 0) {
     return Color(0.0, 0.0, 0.0);
   }
 
-  // if (scene.hit(r, 0.001, INFTY, hit)) {
-  //     // compute the location of the hit
-  //     auto& normal = hit.n_;
-  //     Point3 target = hit.p_ + hit.n_ + random_in_hemisphere(hit.n_);
-
-  //     const double bounce_reduction = 0.5;
-  //     return bounce_reduction * ray_color(Ray(hit.p_, target - hit.p_), scene, ++depth);
-  // }
-
   // Color using background
   Vec3 unit_direction = unit_vector(r.direction());
   double t = 0.5*(unit_direction.y() + 1.0);
@@ -91,7 +82,7 @@ Scene red_blue() {
             r,
             std::make_shared<Lambertian>(Color(1, 0, 0))));
 
-    // Setup camera
+  // Setup camera
   Point3 camera_position{0, 0, 0};
   Point3 camera_target{0, 0, -1};
   double field_of_view = 90;
@@ -108,6 +99,79 @@ Scene red_blue() {
   return {objects, camera};
 }
 
+Scene book_cover() {
+
+  ObjectList objects;
+
+  auto ground_mat = std::make_shared<Lambertian>(Color(0.5, 0.5, 0.5));
+  objects.add(std::make_shared<Sphere>(Point3(0, -1000, 0), 1000, ground_mat));
+
+  for (int a = -11; a < 11; a++) {
+    for (int b = -11; b < 11; b++) {
+      auto choose_mat = nrand();
+      Point3 center{a + 0.9*nrand(), 0.2, b + 0.9*nrand()};
+
+      if ((center - Vec3(4, 0.2, 0)).length() > 2.0) {
+        if (choose_mat < 0.8) {
+          Color albedo = Color::random(0, 1);
+          auto sphere_material = std::make_shared<Lambertian>(albedo);
+          objects.add(std::make_shared<Sphere>(center, 0.2, sphere_material));
+        } else if (choose_mat < 0.95) {
+          auto albedo = Color::random(0.5, 1);
+          auto fuzz = nrand(0, 0.5);
+          auto sphere_material = std::make_shared<Metal>(albedo, fuzz);
+          objects.add(std::make_shared<Sphere>(center, 0.2, sphere_material));
+        } else {
+          // glass
+          auto sphere_material = std::make_shared<Dielectric>(1.5);
+          objects.add(std::make_shared<Sphere>(center, 0.1, sphere_material));
+        }
+      }
+    }
+  }
+
+  auto material1 = std::make_shared<Dielectric>(1.5);
+  objects.add(std::make_shared<Sphere>(Point3(0, 1, 0), 1.0, material1));
+
+  auto material2 = std::make_shared<Lambertian>(Color(0.4, 0.2, 0.1));
+  objects.add(std::make_shared<Sphere>(Point3(-4, 1, 0), 1.0, material2));
+
+  auto material3 = std::make_shared<Metal>(Color(0.7, 0.6, 0.5), 0.0);
+  objects.add(std::make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));
+
+  // Setup camera
+  Point3 camera_position{13, 2, 3};
+  Point3 camera_target{0, 0, 0};
+  double field_of_view = 20;
+  double aperture = 0.1;
+
+  Camera camera(camera_position,
+                camera_target,
+                Point3(0, 1, 0),
+                field_of_view,
+                ASPECT_RATIO,
+                aperture,
+                10.0);
+
+  // // Camera setup
+  // Point3 camera_origin{13, 2, 3};
+  // Point3 camera_target{0, 0, 0};
+  // Vec3 vup{0, 1, 0};
+  // double field_of_view = 20;
+  // double focus_dist = 10.0;
+  // double aperture = 0.1;
+
+  // Camera camera(camera_origin,
+  //               camera_target,
+  //               vup,
+  //               field_of_view,
+  //               ASPECT_RATIO,
+  //               aperture,
+  //               focus_dist);
+
+  return {objects, camera};
+}
+
 int main() {
 
   std::ofstream outfile("image.ppm");
@@ -116,7 +180,7 @@ int main() {
   const int image_height = static_cast<int>(image_width / ASPECT_RATIO);
   outfile << "P3\n" << image_width << " " << image_height << "\n" << IRGB_MAX << "\n";
 
-  Scene scene = red_blue();
+  Scene scene = book_cover();
 
   for (int j = image_height - 1; j >= 0; --j) {
     std::cerr << "\rScanlines remaining: " << j << " " << std::flush;

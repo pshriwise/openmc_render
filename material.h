@@ -13,7 +13,7 @@ public:
 class Lambertian : public Material {
 public:
   // Constructors
-  Lambertian(const Color &a) : albedo_(a) {};
+  Lambertian(const Color& a) : albedo_(a) {};
 
   virtual bool scatter(const Ray& r, const Hit& hit, Color& attenuation, Ray& scattered) const {
     Vec3 scattered_dir = hit.n_ + Vec3::random();

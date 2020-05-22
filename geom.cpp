@@ -3,14 +3,15 @@
 
 bool hit_sphere(const Point3& center, double radius, const Ray& r, double& t) {
   Vec3 oc = r.origin() - center;
-  double a = dot(r.direction(), r.direction());
-  double b = 2.0 * dot(oc, r.direction());
-  double c = dot(oc, oc) - radius * radius;
-  double discriminant = b*b - 4.0*a*c;
+  double a = r.direction().length_squared();
+  double half_b = dot(oc, r.direction());
+  double c = oc.length_squared() - radius * radius;
+  double discriminant = half_b*half_b - a*c;
   bool hit = discriminant > 0.0;
 
   if (hit) {
-    t = (-b - sqrt(discriminant)) / (2.0 * a);
+    t = (-half_b - sqrt(discriminant)) / a;
   }
+
   return hit;
 }

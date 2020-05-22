@@ -25,4 +25,8 @@ const int IRGB_MAX = 255;
 // Scene
 const int MAX_BOUNCE = 50;
 
+// Physics
+const double GAMMA = 2.2;
+const double RCP_GAMMA = 1.0 / GAMMA;
+
 #endif

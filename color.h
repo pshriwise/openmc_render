@@ -20,6 +20,10 @@ void write_color(std::ostream &out, Color pixel_color, int n_samples) {
     r *= rcp_samples;
     g *= rcp_samples;
     b *= rcp_samples;
+    // Gamma correction: adjusting for perceived brightness vs. linear brightness
+    r = std::pow(r, RCP_GAMMA);
+    g = std::pow(g, RCP_GAMMA);
+    b = std::pow(b, RCP_GAMMA);
 
     const double color_min = 0.0;
     const double color_max = 0.999;

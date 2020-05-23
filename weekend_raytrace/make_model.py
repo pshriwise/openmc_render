@@ -12,18 +12,23 @@ model = openmc.model.Model()
 ground_sphere = openmc.Sphere(0, -100.5, 0, 100, boundary_type='vacuum')
 
 cyl = openmc.YCylinder(0, -1, 0.5, boundary_type='vacuum')
-ymax = openmc.YPlane(0.7, boundary_type='vacuum')
-ymin = openmc.YPlane(0.1, boundary_type='vacuum')
-top_cap = openmc.Sphere(0, 0.7, -1, 0.5, boundary_type='vacuum')
-bottom_cap = openmc.Sphere(0, 0.1, -1, 0.5, boundary_type='vacuum')
+ymax = openmc.YPlane(1.0, boundary_type='vacuum')
+ymin = openmc.YPlane(0.3, boundary_type='vacuum')
+top_cap = openmc.Sphere(0, 1.0, -1, 0.5, boundary_type='vacuum')
+bottom_cap = openmc.Sphere(0, 0.3, -1, 0.5, boundary_type='vacuum')
 ground_cell = openmc.Cell(fill=mats[1], region=-ground_sphere)
 
-marble = openmc.Cell(fill=mats[3], region=(-cyl & -ymax & +ymin))
-another_sphere = openmc.Sphere(1.0, 0.5, -1.0, 0.2, boundary_type='vacuum')
+marble = openmc.Cell(fill=mats[3], region=((-cyl & -ymax & +ymin) | -top_cap | -bottom_cap))
+another_sphere = openmc.Sphere(-1.0, 0.5, -1.0, 0.2, boundary_type='vacuum')
 
 another_sphere_cell = openmc.Cell(fill=mats[1], region=-another_sphere)
 
-model.geometry = openmc.Geometry([ground_cell, marble, another_sphere_cell])
+outer_cyl = openmc.YCylinder(2, -1, 0.7, boundary_type='vacuum')
+inner_cyl = openmc.YCylinder(2, -1, 0.5, boundary_type='vacuum')
+
+annulus = openmc.Cell(fill=mats[1], region= +inner_cyl & -outer_cyl & -ymax & +ymin)
+
+model.geometry = openmc.Geometry([ground_cell, marble, another_sphere_cell, annulus])
 model.materials = [mats[1], mats[3]]
 
 model.settings.particles = 500

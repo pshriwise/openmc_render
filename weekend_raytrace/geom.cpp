@@ -179,7 +179,7 @@ bool OpenMCCell::hit(const Ray& r, double t_min, double t_max, Hit& rec) const {
     rec.p_ = r.at(t);
 
     auto openmc_norm = openmc::model::surfaces[std::abs(surf_idx) - 1]->normal(rec.p_.e);
-    if (surf_idx < 0) openmc_norm *= -1;
+    if (surf_idx > 0) openmc_norm *= -1;
     Vec3 outward_normal{openmc_norm.x, openmc_norm.y, openmc_norm.z};
     rec.set_face_normal(r, unit_vector(outward_normal));
     rec.material_ = material_;
@@ -189,25 +189,4 @@ bool OpenMCCell::hit(const Ray& r, double t_min, double t_max, Hit& rec) const {
   return false;
 }
 
-// bool OpenMCSphere::hit (const Ray& r, double t_min, double t_max, Hit& rec) const {
-
-//   // check for a hit
-//   openmc::Position p = r.orig.e;
-//   openmc::Direction u = r.dir.e;
-//   u /= u.norm();
-//   double dist = openmc_sphere_->distance(p, u, false);
-
-//   if (dist < openmc::INFTY) {
-//     // compute t-value
-//     rec.t_ = dist;
-//     rec.p_ = r.at(dist);
-//     auto openmc_norm = openmc_sphere_->normal(rec.p_.e);
-//     Vec3 outward_normal{openmc_norm.x, openmc_norm.y, openmc_norm.z};
-//     rec.set_face_normal(r, unit_vector(outward_normal));
-//     rec.material_ = material_;
-//     return true;
-//   }
-
-//   return false;
-// }
 #endif //OPENMC

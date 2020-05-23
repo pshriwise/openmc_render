@@ -20,7 +20,7 @@ for a in range(-11, 11):
     for b in range(-11, 11):
         center = np.asarray((a + 0.9 * random(), 0.2, b + 0.9 * random()))
 
-        if (np.linalg.norm(center - middle) < 2.0):
+        if (np.linalg.norm(center - middle) < 3.0):
             continue
 
         sphere = openmc.Sphere(*center, 0.2, boundary_type='vacuum')

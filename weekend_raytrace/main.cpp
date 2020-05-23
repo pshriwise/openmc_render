@@ -14,6 +14,7 @@
 
 int main(int argc, char** argv) {
 
+  // options
   std::string scene_name = "three_spheres";
 
   if (argc > 1) {
@@ -22,8 +23,14 @@ int main(int argc, char** argv) {
 
   int image_width = 200;
 
+  int samples_per_pixel = 40;
+
   if (argc > 2) {
     image_width = std::stoi(argv[2]);
+  }
+
+  if (argc > 3) {
+    samples_per_pixel = std::stoi(argv[3]);
   }
 
   const int image_height = static_cast<int>(image_width / ASPECT_RATIO);
@@ -39,13 +46,13 @@ int main(int argc, char** argv) {
     #pragma omp parallel for shared(img_data, scene) schedule(dynamic)
     for (int i = 0; i < image_width; ++i) {
       Color pixel_color{0.0, 0.0, 0.0};
-      for (int s = 0; s < SAMPLES_PER_PIXEL; ++s) {
+      for (int s = 0; s < samples_per_pixel; ++s) {
         double u = (i + nrand()) / (image_width - 1);
         double v = (j + nrand()) / (image_height - 1);
         Ray r = scene.camera().get_ray(u, v);
         pixel_color += trace_color(r, scene.objects());
       }
-      img_data[(image_height - 1 - j) * image_width + i] = gen_color(pixel_color, SAMPLES_PER_PIXEL);
+      img_data[(image_height - 1 - j) * image_width + i] = gen_color(pixel_color, samples_per_pixel);
     }
   }
 

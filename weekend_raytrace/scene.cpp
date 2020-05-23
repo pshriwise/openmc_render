@@ -148,36 +148,6 @@ Scene book_cover() {
 
 #ifdef OPENMC
 
-// Add default constructor to openmc::Sphere to enable this scene
-//Scene book_cover_openmc() { return book_cover_t<OpenMCSphere>(); }
-
-// Scene openmc_spheres() {
-
-//   ObjectList objects;
-
-//   auto material1 = std::make_shared<Lambertian>(Color(0.0, 0.0, 0.5));
-//   auto material2 = std::make_shared<Lambertian>(Color(0.5 , 0.5, 0.5));
-
-//   objects.add(std::make_shared<OpenMCSphere>(Point3(0, 0, -1), 0.5, material1));
-//   objects.add(std::make_shared<OpenMCSphere>(Point3(0, -100.5, -1), 100, material2));
-
-//   // Setup camera
-//   Point3 camera_position{0, 5, 0};
-//   Point3 camera_target{0, 0, -1};
-//   double field_of_view = 90;
-//   double aperture = 2.0;
-
-//   Camera camera(camera_position,
-//                 camera_target,
-//                 Point3(0, 1, 0),
-//                 field_of_view,
-//                 ASPECT_RATIO,
-//                 aperture,
-//                 (camera_position - camera_target).length());
-
-//   return {objects, camera};
-// }
-
 Scene openmc_book_cover() {
   openmc_init(0, nullptr, nullptr);
 
@@ -221,6 +191,7 @@ Scene openmc_book_cover() {
                 ASPECT_RATIO,
                 aperture,
                 10.0);
+
   return {objects, camera};
 }
 
@@ -252,10 +223,10 @@ Scene openmc_setup() {
   }
 
   // Setup camera
-  Point3 camera_position{0, 0.25, 1};
+  Point3 camera_position{0, 2, 1};
   Point3 camera_target{0, 0, -1};
-  double field_of_view = 90;
-  double aperture = 0.1;
+  double field_of_view = 80;
+  double aperture = 0.0;
 
   Camera camera(camera_position,
                 camera_target,

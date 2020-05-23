@@ -19,16 +19,15 @@ bottom_cap = openmc.Sphere(0, 0.3, -1, 0.5, boundary_type='vacuum')
 ground_cell = openmc.Cell(fill=mats[1], region=-ground_sphere)
 
 marble = openmc.Cell(fill=mats[3], region=((-cyl & -ymax & +ymin) | -top_cap | -bottom_cap))
-another_sphere = openmc.Sphere(-1.0, 0.5, -1.0, 0.2, boundary_type='vacuum')
+another_sphere = openmc.Sphere(-1.5, 0.5, -1.0, 0.5, boundary_type='vacuum')
 
 another_sphere_cell = openmc.Cell(fill=mats[1], region=-another_sphere)
 
-outer_cyl = openmc.YCylinder(2, -1, 0.7, boundary_type='vacuum')
-inner_cyl = openmc.YCylinder(2, -1, 0.5, boundary_type='vacuum')
+ycone = openmc.YCone(1.5, 1.0, -1, 0.5, boundary_type='vacuum')
 
-annulus = openmc.Cell(fill=mats[1], region= +inner_cyl & -outer_cyl & -ymax & +ymin)
+cone = openmc.Cell(fill=mats[1], region=(-ycone & -ymax & +ymin))
 
-model.geometry = openmc.Geometry([ground_cell, marble, another_sphere_cell, annulus])
+model.geometry = openmc.Geometry([ground_cell, marble, another_sphere_cell, cone])
 model.materials = [mats[1], mats[3]]
 
 model.settings.particles = 500

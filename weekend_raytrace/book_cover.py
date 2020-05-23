@@ -14,13 +14,13 @@ ground = openmc.Cell(fill=mat, region=-ground_sphere, name="ground")
 
 spheres = [ground]
 
-middle = np.asarray((4, 0.2, 0))
+middle = np.asarray((0, 0.2, 0))
 
 for a in range(-11, 11):
     for b in range(-11, 11):
         center = np.asarray((a + 0.9 * random(), 0.2, b + 0.9 * random()))
 
-        if (np.linalg.norm(center - middle) < 3.0):
+        if (np.linalg.norm(middle - center) < 3.0):
             continue
 
         sphere = openmc.Sphere(*center, 0.2, boundary_type='vacuum')

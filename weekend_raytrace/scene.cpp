@@ -39,16 +39,16 @@ Scene three_spheres() {
   auto material3 = std::make_shared<Metal>(Color(0.8, 0.8, 0.8), 1.0);
   auto material4 = std::make_shared<Dielectric>(1.5);
 
-  objects.add(std::make_shared<Sphere>(Point3(0, 0, -1), 0.5, material1));
-  objects.add(std::make_shared<Sphere>(Point3(0, -100.5, -1), 100, material2));
-  objects.add(std::make_shared<Sphere>(Point3(1.0, 0, -1), 0.5, material3));
-  objects.add(std::make_shared<Sphere>(Point3(-1.0, 0, -1), 0.5, material4));
+  objects.add(std::make_shared<Sphere>(Point3(0, 0, -1), 0.5, material2));
+  objects.add(std::make_shared<Sphere>(Point3(0, -100.5, -1), 100, material1));
+  objects.add(std::make_shared<Sphere>(Point3(1.0, 0, -1), 0.5, material2));
+  objects.add(std::make_shared<Sphere>(Point3(-1.0, 0, -1), 0.5, material2));
 
   // Setup camera
   Point3 camera_position{3, 3, 2};
   Point3 camera_target{0, 0, -1};
   double field_of_view = 20;
-  double aperture = 2.0;
+  double aperture = 0.0;
 
   Camera camera(camera_position,
                 camera_target,
@@ -223,9 +223,9 @@ Scene openmc_setup() {
   }
 
   // Setup camera
-  Point3 camera_position{0, 2, 1};
+  Point3 camera_position{0, 2.5, 1};
   Point3 camera_target{0, 0, -1};
-  double field_of_view = 80;
+  double field_of_view = 90;
   double aperture = 0.0;
 
   Camera camera(camera_position,

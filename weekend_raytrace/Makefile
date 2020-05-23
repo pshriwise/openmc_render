@@ -19,19 +19,22 @@ tracer: $(TRACER_SOURCES)
 	g++ -O2 $(TRACER_SOURCES) -o tracer
 
 tracer_dbg: *.cpp *.h
-	g++ -g $(TRACER_SOURCES) -o tracer
+	g++ -g $(TRACER_SOURCES) -o tracer_dbg
 
 tracer_omp: $(TRACER_SOURCES)
-	g++ -O2 -fopenmp $(TRACER_SOURCES) -pthread -o tracer
+	g++ -O2 -fopenmp $(TRACER_SOURCES) -pthread -o tracer_omp
 
 openmc_tracer: $(TRACER_SOURCES)
 	- g++ -DOPENMC -O2 $(OPENMC_INCLUDE_DIRS) $(TRACER_SOURCES) $(OPENMC_LIB_FLAGS) -o openmc_tracer
 
+openmc_tracer_dbg: $(TRACER_SOURCES)
+	- g++ -DOPENMC -g $(OPENMC_INCLUDE_DIRS) $(TRACER_SOURCES) $(OPENMC_LIB_FLAGS) -o openmc_tracer_dbg
+
 openmc_tracer_omp: $(TRACER_SOURCES)
-	- g++ -DOPENMC -O2 -fopenmp $(OPENMC_INCLUDE_DIRS) $(TRACER_SOURCES) -pthread $(OPENMC_LIB_FLAGS) -pthread -o openmc_tracer
+	- g++ -DOPENMC -O2 -fopenmp $(OPENMC_INCLUDE_DIRS) $(TRACER_SOURCES) -pthread $(OPENMC_LIB_FLAGS) -pthread -o openmc_tracer_omp
 
 ray_test: $(RAY_TEST_SOURCES)
-	- g++ -g -fopenmp $(OPENMC_INCLUDE_DIRS) $(RAY_TEST_SOURCES) -pthread $(OPENMC_LIB_FLAGS) -pthread -o ray_test
+	- g++ -DOPENMC -g $(OPENMC_INCLUDE_DIRS) $(RAY_TEST_SOURCES) $(OPENMC_LIB_FLAGS) -o ray_test
 
 clean:
 	- rm -rf openmc_tracer tracer

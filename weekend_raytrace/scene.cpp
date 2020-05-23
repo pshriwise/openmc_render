@@ -16,7 +16,7 @@ Scene create_scene(std::string scene_name) {
     #ifdef OPENMC
     return openmc_setup();
     #else
-    throw std::invalid_argument("OpenMC rendering is not enabled.");
+    throw std::invalid_argument("OpenMC rendering is not enabled in this executable.");
     #endif
   } else {
     throw std::invalid_argument("Invalid scene name \"" + scene_name + "\" specified.");

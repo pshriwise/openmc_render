@@ -54,7 +54,7 @@ Color ray_color(const Ray& r, const ObjectList& objects) {
 
 int main() {
 
-  const int image_width = 400;
+  const int image_width = 4000;
   const int image_height = static_cast<int>(image_width / ASPECT_RATIO);
 
   std::vector<std::array<uint8_t, 3>> img_data(image_width*image_width);

@@ -101,9 +101,9 @@ Scene Scene::book_cover() {
   objects.add(std::make_shared<Sphere>(Point3(4, 1, 0), 1.0, material3));
 
   // Setup camera
-  Point3 camera_position{13, 2, -3};
+  Point3 camera_position{10, 2, -5};
   Point3 camera_target{0, 0, 0};
-  double field_of_view = 20;
+  double field_of_view = 30;
   double aperture = 0.1;
   double focal_dist = 10.0;
 

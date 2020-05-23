@@ -23,7 +23,9 @@ struct Scene {
 Scene red_blue();
 Scene three_spheres();
 Scene book_cover();
+
 #ifdef OPENMC
+Scene book_cover_openmc();
 Scene openmc_setup();
 #endif
 

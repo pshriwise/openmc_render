@@ -47,73 +47,72 @@ bool OpenMCCell::hit(const Ray& r, double t_min, double t_max, Hit& rec) const {
   openmc::Direction u = r.dir.e;
   u /= u.norm();
 
+  const auto& rpn = cell_ptr_->rpn_;
+
   // compute the minimum of spans for all surfaces in the cell
-  std::vector<double> t_minimums(cell_ptr_->rpn_.size());
-  std::vector<HitSpan> spans(cell_ptr_->rpn_.size());
+  std::vector<double> t_minimums(rpn.size());
+  std::vector<HitSpan> spans(rpn.size());
 
-  double t;
+  for (int32_t i = 0; i < rpn.size(); ++i) {
+    const auto& token = rpn[i];
+    auto& this_span = spans[i];
 
-  for (int32_t i = 0; i < cell_ptr_->rpn_.size(); ++i) {
-    auto token = cell_ptr_->rpn_[i];
     if (token >= openmc::OP_UNION) {
-      t_minimums[i] = -1.0;
-      spans[i].min = -1.0;
-      spans[i].max = -1.0;
       continue;
     }
 
     const auto& surf = openmc::model::surfaces[std::abs(token) -1];
 
-    spans[i].min_surf = token;
+    this_span.min_surf = token;
     // if we're inside the halfspace, minimum intersection is zero
     if (token * surf->evaluate(r.orig.e) > 0) {
-      t_minimums[i] = 0.0;
-      spans[i].min = 0.0;
+      this_span.min = 0.0;
       // check for exiting intersection
-      spans[i].max = surf->distance(p, u, false);
+      this_span.max = surf->distance(p, u, false);
     } else {
       // attempt to find an intersection with the halfspace
-      spans[i].min = surf->distance(p, u, false);
-      if (spans[i].min < openmc::INFTY) {
-        spans[i].max = spans[i].min + surf->distance(p + u * (spans[i].min + 1E-06), u, false);
+      this_span.min = surf->distance(p, u, false);
+      if (this_span.min < openmc::INFTY) {
+        this_span.max = this_span.min + surf->distance(p + u * (this_span.min + 1E-06), u, false);
       } else {
-        spans[i].max = -INFTY;
+        this_span.max = -INFTY;
       }
     }
   }
 
-  HitSpan span = {-INFTY, INFTY};
+  HitSpan final_span = {-INFTY, INFTY};
 
   if (cell_ptr_->simple_) {
-    for (int i = 0; i < cell_ptr_->rpn_.size(); ++i) {
-      auto token = cell_ptr_->rpn_[i];
+    for (int i = 0; i < rpn.size(); ++i) {
+      const auto& token = rpn[i];
       if (token >= openmc::OP_UNION) continue;
-      span &= spans[i];
+      final_span &= spans[i];
     }
   } else {
-    std::vector<double> stack(cell_ptr_->rpn_.size());
+    std::vector<HitSpan> stack(rpn.size());
     int i_stack = -1;
-    for (int i = 0; i < cell_ptr_->rpn_.size(); ++i) {
-      auto token = cell_ptr_->rpn_[i];
+    for (int i = 0; i < rpn.size(); ++i) {
+      auto token = rpn[i];
       if (token == openmc::OP_UNION) {
-        stack[i_stack - 1] = std::min(stack[i_stack - 1], stack[i_stack]);
+        stack[i_stack - 1] = stack[i_stack - 1] & stack[i_stack];
         i_stack--;
       } else if (token == openmc::OP_INTERSECTION) {
-        stack[i_stack - 1] = std::max(stack[i_stack - 1], stack[i_stack]);
+        stack[i_stack - 1] = stack[i_stack - 1] | stack[i_stack];
         i_stack--;
       } else {
         i_stack++;
-        stack[i_stack] = t_minimums[i];
+        stack[i_stack] = spans[i];
       }
     }
-    t = stack.front();
+    final_span = stack.front();
   }
 
   // if the span is invlaid, there is no hit
-  if (!span.is_valid()) {return false;}
+  if (!final_span.is_valid()) { return false; }
+  // if the final span is valid, continue
+  double t = final_span.min;
+  int32_t surf_idx = final_span.min_surf;
 
-  t = span.min;
-  int32_t surf_idx = span.min_surf;
   if (t > t_min && t < t_max && t < openmc::INFTY) {
     rec.t_ = t;
     rec.p_ = r.at(t);
@@ -195,7 +194,7 @@ Scene openmc_setup() {
   }
 
   // Setup camera
-  Point3 camera_position{0, 0.5, 1};
+  Point3 camera_position{0, 0.25, 1};
   Point3 camera_target{0, 0, -1};
   double field_of_view = 90;
   double aperture = 0.0;

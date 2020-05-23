@@ -3,6 +3,7 @@
 #include <fstream>
 #include <memory>
 #include <sstream>
+#include <string>
 
 #include "color.h"
 #include "constants.h"
@@ -52,15 +53,26 @@ Color ray_color(const Ray& r, const ObjectList& objects) {
   return BLACK;
 }
 
-int main() {
+int main(int argc, char** argv) {
 
-  const int image_width = 4000;
+  std::string scene_name = "three_spheres";
+
+  if (argc > 1) {
+    scene_name = argv[1];
+  }
+
+  int image_width = 200;
+
+  if (argc > 2) {
+    image_width = std::stoi(argv[2]);
+  }
+
   const int image_height = static_cast<int>(image_width / ASPECT_RATIO);
 
   std::vector<std::array<uint8_t, 3>> img_data(image_width*image_width);
 
   // image generation
-  auto scene = Scene::create("book_cover");
+  auto scene = Scene::create(scene_name);
   ProgressBar pb{};
 
   for (int j = image_height - 1; j >= 0; --j) {

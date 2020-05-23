@@ -1,6 +1,6 @@
 
 #ifndef MATERIAL_H
-#define MATERIAL
+#define MATERIAL_H
 
 #include "util.h"
 #include "vec3.h"

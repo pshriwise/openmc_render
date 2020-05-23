@@ -1,8 +1,7 @@
 
-#include <iostream>
+
 #include <fstream>
 #include <memory>
-#include <sstream>
 #include <string>
 
 #include "color.h"
@@ -12,8 +11,7 @@
 #include "rand.h"
 #include "ray.h"
 #include "scene.h"
-
-#include "openmc/surface.h"
+#include "openmc_scenes.h"
 
 Color ray_color(const Ray& r, const ObjectList& objects) {
   // copy of the input ray
@@ -55,77 +53,6 @@ Color ray_color(const Ray& r, const ObjectList& objects) {
   return BLACK;
 }
 
-class OpenMCSphere : public Object {
-public:
-  OpenMCSphere(Point3 center, double radius, std::shared_ptr<Material> material)
-    : material_(material) {
-
-      // create an OpenMC object for the sphere
-
-      openmc_sphere_ = std::make_shared<openmc::SurfaceSphere>();
-      openmc_sphere_->x0_ = center.x();
-      openmc_sphere_->y0_ = center.y();
-      openmc_sphere_->z0_ = center.z();
-      openmc_sphere_->radius_ = radius;
-
-  };
-
-  // Methods
-  virtual bool hit(const Ray& r, double t_min, double t_max, Hit& rec) const;
-
-  std::shared_ptr<Material> material_;
-  std::shared_ptr<openmc::SurfaceSphere> openmc_sphere_;
-};
-
-bool OpenMCSphere::hit (const Ray& r, double t_min, double t_max, Hit& rec) const {
-
-  // check for a hit
-  openmc::Position p = r.orig.e;
-  openmc::Direction u = r.dir.e;
-  u /= u.norm();
-  double dist = openmc_sphere_->distance(p, u, false);
-
-  if (dist < openmc::INFTY) {
-    // compute t-value
-    rec.t_ = dist;
-    rec.p_ = r.at(dist);
-    auto openmc_norm = openmc_sphere_->normal(rec.p_.e);
-    Vec3 outward_normal{openmc_norm.x, openmc_norm.y, openmc_norm.z};
-    rec.set_face_normal(r, unit_vector(outward_normal));
-    rec.material_ = material_;
-    return true;
-  }
-
-  return false;
-}
-
-Scene openmc_spheres() {
-
-  ObjectList objects;
-
-  auto material1 = std::make_shared<Lambertian>(Color(0.0, 0.0, 0.5));
-  auto material2 = std::make_shared<Lambertian>(Color(0.5 , 0.5, 0.5));
-
-  objects.add(std::make_shared<OpenMCSphere>(Point3(0, 0, -1), 0.5, material1));
-  objects.add(std::make_shared<OpenMCSphere>(Point3(0, -100.5, -1), 100, material2));
-
-  // Setup camera
-  Point3 camera_position{0, 0, 0};
-  Point3 camera_target{0, 0, -1};
-  double field_of_view = 90;
-  double aperture = 0.0;
-
-  Camera camera(camera_position,
-                camera_target,
-                Point3(0, 1, 0),
-                field_of_view,
-                ASPECT_RATIO,
-                aperture,
-                (camera_position - camera_target).length());
-
-  return {objects, camera};
-}
-
 int main(int argc, char** argv) {
 
   std::string scene_name = "three_spheres";
@@ -145,7 +72,7 @@ int main(int argc, char** argv) {
   std::vector<std::array<uint8_t, 3>> img_data(image_width*image_width);
 
   // image generation
-  //auto scene = Scene::create(scene_name);
+  // auto scene = Scene::create(scene_name);
   auto scene = openmc_spheres();
   ProgressBar pb{};
 

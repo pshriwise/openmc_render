@@ -20,15 +20,19 @@ struct Scene {
 };
 
 // Hardcoded Scenes
+
+// Native scenes
 Scene red_blue();
 Scene three_spheres();
 Scene book_cover();
 
+// OpenMC Scenes
 #ifdef OPENMC
-Scene book_cover_openmc();
+Scene openmc_book_cover();
 Scene openmc_setup();
 #endif
 
+// Scene creator function
 Scene create_scene(std::string scene_name);
 
 #endif

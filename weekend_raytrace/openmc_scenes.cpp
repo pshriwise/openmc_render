@@ -2,6 +2,7 @@
 #include "openmc_scenes.h"
 #include "openmc/capi.h"
 
+
 std::vector<std::shared_ptr<Material>> materials;
 
 struct HitSpan {

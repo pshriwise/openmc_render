@@ -5,6 +5,10 @@
 #include "camera.h"
 #include "geom.h"
 
+#ifdef OPENMC
+#include "openmc/surface.h"
+#include "openmc/cell.h"
+#endif
 
 struct Scene {
   ObjectList objects_;
@@ -13,23 +17,16 @@ struct Scene {
   inline Camera& camera() { return camera_; }
   inline ObjectList& objects() { return objects_; }
 
-  // Hardcoded Scenes
-  static Scene red_blue();
-  static Scene three_spheres();
-  static Scene book_cover();
-
-  static Scene create(std::string scene_name) {
-    if (scene_name == "red_blue") {
-      return red_blue();
-    } else if (scene_name == "three_spheres") {
-      return three_spheres();
-    } else if (scene_name == "book_cover") {
-      return book_cover();
-    } else {
-      throw std::invalid_argument("Invalid scene name \"" + scene_name + "\" specified.");
-    }
-  }
-
 };
+
+// Hardcoded Scenes
+Scene red_blue();
+Scene three_spheres();
+Scene book_cover();
+#ifdef OPENMC
+Scene openmc_setup();
+#endif
+
+Scene create_scene(std::string scene_name);
 
 #endif

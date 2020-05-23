@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
   std::vector<std::array<uint8_t, 3>> img_data(image_width*image_width);
 
   // image generation
-  auto scene = Scene::create(scene_name);
+  auto scene = create_scene(scene_name);
   ProgressBar pb{};
 
   for (int j = image_height - 1; j >= 0; --j) {

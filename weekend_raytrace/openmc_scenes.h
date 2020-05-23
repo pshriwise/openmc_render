@@ -9,6 +9,7 @@
 #include "scene.h"
 
 Scene openmc_spheres();
+Scene openmc_setup();
 
 // generalized OpenMC CSG class
 class OpenMCCell : public Object {

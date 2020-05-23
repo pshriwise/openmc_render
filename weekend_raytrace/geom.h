@@ -26,6 +26,7 @@ public:
   // Methods
   void clear() { objects_.clear(); }
   void add(std::shared_ptr<Object> object) { objects_.push_back(object); }
+  Object* get(int i) { return objects_[i].get(); }
 
   virtual bool hit(const Ray& r, double t_min, double t_max, Hit& rec) const;
 

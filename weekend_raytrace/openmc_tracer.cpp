@@ -13,9 +13,6 @@
 #include "scene.h"
 #include "openmc_scenes.h"
 
-#include "openmc/cell.h"
-#include "openmc/capi.h"
-
 Color ray_color(const Ray& r, const ObjectList& objects) {
   // copy of the input ray
   Ray ray = r;
@@ -56,41 +53,6 @@ Color ray_color(const Ray& r, const ObjectList& objects) {
   return BLACK;
 }
 
-Scene openmc_setup() {
-  openmc_init(0, nullptr, nullptr);
-
-  ObjectList objects;
-
-  // create an object for each cell in the OpenMC problem
-
-  for (const auto& cell : openmc::model::cells) {
-    // randomize material
-    auto material = std::make_shared<Lambertian>(unit_vector(Color::random()));
-
-    auto object = std::make_shared<OpenMCCell>(cell.get(), material);
-
-    objects.add(object);
-  }
-
-
-   // Setup camera
-  Point3 camera_position{0, 0, 0};
-  Point3 camera_target{0, 0, -1};
-  double field_of_view = 90;
-  double aperture = 0.0;
-
-  Camera camera(camera_position,
-                camera_target,
-                Point3(0, 1, 0),
-                field_of_view,
-                ASPECT_RATIO,
-                aperture,
-                (camera_position - camera_target).length());
-
-  return {objects, camera};
-}
-
-
 int main(int argc, char** argv) {
 
   std::string scene_name = "three_spheres";
@@ -99,7 +61,7 @@ int main(int argc, char** argv) {
     scene_name = argv[1];
   }
 
-  int image_width = 800;
+  int image_width = 600;
 
   if (argc > 2) {
     image_width = std::stoi(argv[2]);

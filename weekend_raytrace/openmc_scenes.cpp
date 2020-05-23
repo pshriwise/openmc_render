@@ -11,7 +11,8 @@ bool OpenMCCell::hit(const Ray& r, double t_min, double t_max, Hit& rec) const {
   if (hit.first < openmc::INFTY) {
   rec.t_ = hit.first;
   rec.p_ = r.at(hit.first);
-  auto openmc_norm = openmc::model::surfaces[hit.second]->normal(rec.p_.e);
+  auto openmc_norm = openmc::model::surfaces[std::abs(hit.second) - 1]->normal(rec.p_.e);
+  if (hit.second < 0) { openmc_norm *= -1; }
   Vec3 outward_normal{openmc_norm.x, openmc_norm.y, openmc_norm.z};
   rec.set_face_normal(r, unit_vector(outward_normal));
   rec.material_ = material_;

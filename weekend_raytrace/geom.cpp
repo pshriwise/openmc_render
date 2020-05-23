@@ -54,7 +54,7 @@ bool ObjectList::hit(const Ray& r, double t_min, double t_max, Hit& rec) const {
   double t_curr = t_max;
 
   for (const auto& object : objects_) {
-    if (object->hit(r, t_min, t_curr, temp_hit)) {
+    if (object->hit(r, t_min, t_curr, temp_hit) && temp_hit.t_ < t_curr) {
       hit_something = true;
       t_curr = temp_hit.t_;
       rec = temp_hit;

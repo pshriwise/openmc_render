@@ -39,8 +39,7 @@ public:
     Vec3 rd = lens_radius_ * random_in_unit_disk();
     Vec3 offset = u_ * rd.x() + v_ * rd.y();
 
-    return Ray(origin_ + offset,
-               llc_ + s*horizontal_ + t*vertical_ - origin_ - offset);
+    return Ray(origin_ + offset, unit_vector(llc_ + s*horizontal_ + t*vertical_ - origin_ - offset));
   }
 
   // Data Members

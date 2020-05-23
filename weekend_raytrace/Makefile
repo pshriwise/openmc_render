@@ -5,11 +5,9 @@ MC_TRACER_SOURCES=openmc_tracer.cpp geom.cpp progress_bar.cpp scene.cpp
 
 OPENMC_DIR=/home/shriwise/opt/openmc
 
-all: tracer
+HDF5_DIR=/usr/lib/x86_64-linux-gnu/hdf5/serial
 
-test_image: ppm
-	- ./ppm > image.ppm
-	- eog image.ppm
+all: tracer
 
 tracer: *.cpp *.h
 	g++ -O2 $(TRACER_SOURCES) -o tracer
@@ -24,8 +22,11 @@ test: tracer
 	- ./tracer
 	- eog image.ppm
 
-openmc_tracer:
-	- g++ -O2 -I$(OPENMC_DIR)/include $(MC_TRACER_SOURCES) -pthread -L$(OPENMC_DIR)/lib -lopenmc -o openmc_tracer
+openmc_tracer: $(MC_TRACER_SOURCES)
+	- g++ -O2 -I$(OPENMC_DIR)/include -I$(HDF5_DIR)/include $(MC_TRACER_SOURCES) -pthread -L$(OPENMC_DIR)/lib -lopenmc -o openmc_tracer
+
+openmc_tracer_omp: $(MC_TRACER_SOURCES)
+	- g++ -O2 -fopenmp -I$(OPENMC_DIR)/include -I$(HDF5_DIR)/include $(MC_TRACER_SOURCES) -pthread -L$(OPENMC_DIR)/lib -lopenmc -o openmc_tracer
 
 clean:
-	- rm -rf ppm tracer
+	- rm -rf openmc_tracer tracer

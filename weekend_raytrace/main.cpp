@@ -1,5 +1,4 @@
 
-
 #include <fstream>
 #include <memory>
 #include <string>
@@ -21,7 +20,7 @@ int main(int argc, char** argv) {
     scene_name = argv[1];
   }
 
-  int image_width = 600;
+  int image_width = 200;
 
   if (argc > 2) {
     image_width = std::stoi(argv[2]);

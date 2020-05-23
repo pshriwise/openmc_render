@@ -1,9 +1,7 @@
 
 COMMON_SOURCES=geom.cpp progress_bar.cpp trace.cpp color.cpp scene.cpp
 
-TRACER_SOURCES=tracer.cpp $(COMMON_SOURCES)
-
-MC_TRACER_SOURCES=openmc_tracer.cpp
+TRACER_SOURCES=main.cpp $(COMMON_SOURCES)
 
 RAY_TEST_SOURCES=ray_test.cpp $(COMMON_SOURCES)
 
@@ -15,7 +13,7 @@ OPENMC_LIB_FLAGS=-L$(OPENMC_DIR)/lib -lopenmc
 
 OPENMC_INCLUDE_DIRS=-I$(OPENMC_DIR)/include -I$(HDF5_DIR)/include
 
-all: tracer
+all: tracer openmc_tracer
 
 tracer: $(TRACER_SOURCES)
 	g++ -O2 $(TRACER_SOURCES) -o tracer

@@ -8,6 +8,8 @@
 
 #include "scene.h"
 
+extern std::vector<std::shared_ptr<Material>> materials;
+
 Scene openmc_spheres();
 Scene openmc_setup();
 

@@ -2,6 +2,8 @@
 #include "openmc_scenes.h"
 #include "openmc/capi.h"
 
+std::vector<std::shared_ptr<Material>> materials;
+
 struct HitSpan {
 
   // Intersection
@@ -85,7 +87,6 @@ bool OpenMCCell::hit(const Ray& r, double t_min, double t_max, Hit& rec) const {
   if (cell_ptr_->simple_) {
     for (int i = 0; i < rpn.size(); ++i) {
       const auto& token = rpn[i];
-      if (token >= openmc::OP_UNION) continue;
       final_span &= spans[i];
     }
   } else {
@@ -94,10 +95,10 @@ bool OpenMCCell::hit(const Ray& r, double t_min, double t_max, Hit& rec) const {
     for (int i = 0; i < rpn.size(); ++i) {
       auto token = rpn[i];
       if (token == openmc::OP_UNION) {
-        stack[i_stack - 1] = stack[i_stack - 1] & stack[i_stack];
+        stack[i_stack - 1] = stack[i_stack - 1] | stack[i_stack];
         i_stack--;
       } else if (token == openmc::OP_INTERSECTION) {
-        stack[i_stack - 1] = stack[i_stack - 1] | stack[i_stack];
+        stack[i_stack - 1] = stack[i_stack - 1] & stack[i_stack];
         i_stack--;
       } else {
         i_stack++;
@@ -182,13 +183,22 @@ Scene openmc_setup() {
 
   ObjectList objects;
 
+  // create a couple of materials
+  materials.push_back(std::make_shared<Metal>(Color(0.5, 0.5, 0.5), 0.0));
+  materials.push_back(std::make_shared<Lambertian>(Color(0.0, 0.2, 0.8)));
+
+  // add more materials as needed
+  while(materials.size() < openmc::model::cells.size()) {
+    materials.push_back(std::make_shared<Lambertian>(Color::random()));
+  }
+
   // create an object for each cell in the OpenMC problem
 
-  for (const auto& cell : openmc::model::cells) {
+  for (int i = 0; i < openmc::model::cells.size(); ++i) {
     // randomize material
-    auto material = std::make_shared<Lambertian>(unit_vector(Color::random()));
+    const auto& cell = openmc::model::cells[i];
 
-    auto object = std::make_shared<OpenMCCell>(cell.get(), material);
+    auto object = std::make_shared<OpenMCCell>(cell.get(), materials[i]);
 
     objects.add(object);
   }

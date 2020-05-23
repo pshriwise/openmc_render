@@ -1,10 +1,11 @@
 
 TRACER_SOURCES=tracer.cpp geom.cpp progress_bar.cpp scene.cpp
 
-all: tracer
+MC_TRACER_SOURCES=openmc_tracer.cpp geom.cpp progress_bar.cpp scene.cpp
 
-ppm: ppm_demo.cpp
-	g++ ppm_demo.cpp -o ppm
+OPENMC_DIR=/home/shriwise/opt/openmc
+
+all: tracer
 
 test_image: ppm
 	- ./ppm > image.ppm
@@ -22,6 +23,9 @@ tracer_omp: *.cpp *.h
 test: tracer
 	- ./tracer
 	- eog image.ppm
+
+openmc_tracer:
+	- g++ -O2 -I$(OPENMC_DIR)/include $(MC_TRACER_SOURCES) -pthread -L$(OPENMC_DIR)/lib -lopenmc -o openmc_tracer
 
 clean:
 	- rm -rf ppm tracer

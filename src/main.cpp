@@ -10,6 +10,7 @@
 #include "rand.h"
 #include "ray.h"
 #include "scene.h"
+#include "teardown.h"
 #include "trace.h"
 
 int main(int argc, char** argv) {
@@ -74,6 +75,10 @@ int main(int argc, char** argv) {
   }
   outfile << '\n';
   outfile.close();
+
+
+  // used to clean up openmc memory if needed
+  teardown();
 
   return 0;
 }

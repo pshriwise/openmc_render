@@ -1,5 +1,11 @@
+*.cmake
+*.h5
 *.ppm
 *.png
+*.xml
+CMakeCache.txt
+CMakeFiles/
+Makefile
 bld/
 tracer
 .vscode

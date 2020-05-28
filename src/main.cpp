@@ -23,11 +23,12 @@ int main(int argc, char** argv) {
 
   int image_width = 200;
 
-  int samples_per_pixel = 40;
 
   if (argc > 2) {
     image_width = std::stoi(argv[2]);
   }
+
+  int samples_per_pixel = 40;
 
   if (argc > 3) {
     samples_per_pixel = std::stoi(argv[3]);

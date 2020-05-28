@@ -20,7 +20,7 @@ Scenes:
 
   - Native
     - three_spheres: series of three yellow spheres
-    ![Three Spheres](https://github.com/pshriwise/openmc_render/blob/master/images/three_spheres.ppm)
+    ![Three Spheres](https://github.com/pshriwise/openmc_render/blob/master/images/three_spheres.png)
     - book_cover: sene mimicking the cover of the weekend raytracing book
   - OpenMC (if enabled):
     - openmc_cover : scene mimicking the cover of the weekend raytracing book using OpenMC objects

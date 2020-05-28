@@ -1,11 +1,11 @@
 # OpenMC Rendering Pet Project
 
-This project stemmed from working through the free book [Raytracing in One Weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html) by Peter Shirley. The code style presented in the book has been modified somewhat to allow for use of CSG representations from [OpenMC](https://github.com/openmc-dev/openmc/), an open source Monte Carlo radiation transport tool used at Argonne National Laboratory.
+This project stemmed from working through the free book [Raytracing in One Weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html) by Peter Shirley. The code presented in the book has been modified somewhat for a style I'm more familiar with and to allow for use of CSG representations from [OpenMC](https://github.com/openmc-dev/openmc/), an open source Monte Carlo radiation transport tool used at Argonne National Laboratory.
 
 ## Building
 
 ```bash
-$ cmake . -DOPENMC=<PN/OFF> -DOPENMP=<ON/OFF>
+$ cmake . -DOPENMC=<ON/OFF> -DOPENMP=<ON/OFF>
 $ make
 ```
 

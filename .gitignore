@@ -1,5 +1,5 @@
 *.ppm
-ppm
+*.png
+bld/
 tracer
 .vscode
-*.png

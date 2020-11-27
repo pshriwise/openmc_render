@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 3.3 FATAL_ERROR)
 
 
-project(Weekend_Raytrace)
+project(Weekend_Raytrace
+        LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(openmc OFF "Support rendering of OpenMC geometries")
 option(openmp OFF "Support OpenMP parallelism")
